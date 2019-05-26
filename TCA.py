@@ -7,8 +7,57 @@ import requests
 from datetime import datetime
 
 def CPIdentifier():
-    get_table()
+    run_prompt()
 
+def run_prompt():
+    prompt1 = input("Do you wish to search for a card? ")
+
+    if prompt1 in ("Y", "y", "yes", "Yes"):
+        card_search()
+
+    elif prompt1 in ("N", "n", "no", "No"):
+        print("\n This script shall now proceed to update the existing Card Price Entries... \n")
+
+        get_table()
+
+    else:
+        print("\n Illegal entry; It's a Yes or No question! \n")
+        run_prompt()
+
+def card_search():
+        with open("card_list_currents.csv", "r") as file:
+            card_list_table = csv.DictReader(file, delimiter=',')
+
+            names = []
+
+            for row in card_list_table:
+                card_name = row["Card Name"]
+
+                names.append(card_name)
+
+            prompt2 = input("What is the name of the card which you wish to find in the database: ")
+            if prompt2 in names:
+                print("\n That card exists in the database! \n")
+
+                prompt3 = input("Do you wish to search for another card? ")
+
+                if prompt3 in ("Y", "y", "yes", "Yes"):
+                    card_search()
+
+                elif prompt3 in ("N", "n", "no", "No"):
+                    prompt4 = input("Do you wish to find the updated card prices for the entire script? ")
+                    if prompt4 in ("Y", "y", "yes", "Yes"):
+                        get_table()
+                    else:
+                        print("\n Thank you for using this script. Goodbye. \n")
+
+                else:
+                    print("\n Illegal entry; It's a Yes or No question! \n")
+                    run_prompt()
+
+            else:
+                print("\n That card does not exist in the database. \n")
+                card_search()
 
 def get_table():
     card_list_table_updated = []
